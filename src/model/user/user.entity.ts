@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {PlanEntity} from "../plan/plan.entity";
+import {AccountEntity} from "../account/account.entity";
 
 @Entity()
 export class UserEntity {
@@ -12,6 +14,10 @@ export class UserEntity {
     readonly username: string;
     @Column()
     readonly is_child: boolean;
+
+    @OneToOne(type => AccountEntity, account => account.user)
+    @JoinColumn({name: 'account_id'})
+    account: UserEntity[];
 
     constructor(
         id: string,
