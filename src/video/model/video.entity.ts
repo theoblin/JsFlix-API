@@ -1,6 +1,6 @@
-import {Column, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {TagEntity} from "../tag/tag.entity";
-import {AccountEntity} from "../account/account.entity";
+import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {TagEntity} from "../../tag/model/tag.entity";
+import {AccountEntity} from "../../account/model/account.entity";
 
 @Entity()
 export class VideoEntity {

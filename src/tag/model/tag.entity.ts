@@ -1,6 +1,6 @@
 import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {VideoEntity} from "../video/video.entity";
-import {PlanEntity} from "../plan/plan.entity";
+import {VideoEntity} from "../../video/model/video.entity";
+import {PlanEntity} from "../../plan/model/plan.entity";
 
 @Entity()
 export class TagEntity {
