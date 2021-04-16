@@ -11,7 +11,7 @@ export class PlanEntity {
     readonly price: number;
 
     @OneToMany(type => AccountEntity, account => account.plan)
-    account: AccountEntity[];
+    account: AccountEntity;
 
     constructor(
         id: string,

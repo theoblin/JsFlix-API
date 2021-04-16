@@ -3,7 +3,7 @@ import {
     Column,
     Entity,
     JoinTable,
-    ManyToMany,
+    ManyToMany, ManyToOne,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn, Unique
@@ -12,11 +12,6 @@ import {PlanEntity} from "../../plan/model/plan.entity";
 import {JoinColumn} from "typeorm";
 import {UserEntity} from "../../user/model/user.entity";
 import {VideoEntity} from "../../video/model/video.entity";
-import {Exclude} from "class-transformer";
-
-function IsEmail() {
-
-}
 
 @Entity()
 export class AccountEntity {
@@ -45,12 +40,12 @@ export class AccountEntity {
         this.email = this.email.toLowerCase()
     }
 
-    @OneToOne(type => PlanEntity, plan => plan.account)
+    @ManyToOne(type => PlanEntity, plan => plan.account)
     @JoinColumn({name: 'planId',referencedColumnName: "id" })
-    plan: PlanEntity[];
+    plan: PlanEntity;
 
     @OneToMany(type => UserEntity, user => user.account)
-    user: UserEntity[]
+    user: UserEntity
 
     @ManyToMany( type => VideoEntity, video => video.account)
     @JoinTable({
@@ -87,5 +82,6 @@ export class AccountEntity {
         this.last_name = last_name;
         this.country = country;
         this.email = email;
+
     }
 }

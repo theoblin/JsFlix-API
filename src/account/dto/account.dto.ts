@@ -1,12 +1,11 @@
 export class AccountDto {
-    constructor(username: string, email: string, planId: number ) {
+    constructor(username: string, email: string, id: number) {
         this.username = username
         this.email = email
-        this.planId = planId
+        this.id = id
     }
 
     id: number;
     username: string;
     email: string;
-    planId: number;
 }

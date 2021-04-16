@@ -6,6 +6,8 @@ import {AuthService} from "../../auth/service/auth.service";
 import {catchError, map, switchMap} from "rxjs/operators";
 import {from, Observable, throwError} from "rxjs";
 import {AccountDto} from "../dto/account.dto";
+import {PlanEntity} from "../../plan/model/plan.entity";
+import {constants} from "http2";
 
 @Injectable()
 export class AccountService {
@@ -13,7 +15,9 @@ export class AccountService {
     constructor(
         @InjectRepository(AccountEntity)
         private readonly accountEntityRepository: Repository<AccountEntity>,
-        private authService: AuthService
+        @InjectRepository(PlanEntity)
+        private planEntityRepository: Repository<PlanEntity>,
+        private authService: AuthService,
     ) {}
 
     //Create an account
@@ -29,28 +33,30 @@ export class AccountService {
                     data.first_name,
                     data.last_name,
                     data.country,
-                    data.email,
+                    data.email
                 );
                 return from(this.accountEntityRepository.save(newAccount)).pipe(
                     map((account: AccountEntity) => {
                         const {password, ...result} = account
                         return this.convertToDto(result);
                     }),
-                    catchError(err => throwError(err))
                 )
-            }))
+            })
+        )
     }
 
     //Find an account by ID
     findOne(id: number): Promise<any> {
-        return this.accountEntityRepository.findOneOrFail(id).then(account => {
+        return this.accountEntityRepository.findOne(id,{relations:['plan']}).then(account => {
+                if(!account)
+                    throw new NotFoundException(this.errorhandle(id,"find account",404))
                 return this.convertToDto(account)
             }
-        ).catch((e) => e)
+        )
     }
 
     login(account:AccountEntity){
-       return  from(this.valdateAccount(account.email, account.password)).pipe(
+       return  from(this.validateAccount(account.email, account.password)).pipe(
            switchMap((account: AccountEntity) => {
             if(account){
                 return this.authService.generateJWT(account).pipe(map(( jwt: string) => jwt))
@@ -59,8 +65,30 @@ export class AccountService {
        )
     }
 
+    //Link account with is plan ID
+    async addPlanToAccount(id, planId){
+       return from(this.accountEntityRepository.findOne(parseInt(id.id), {relations: ['plan']})).pipe(
+            switchMap((account: AccountEntity) => {
+               if(!account) {
+                   throw new NotFoundException(this.errorhandle(parseInt(id.id),"Find account", 404))
+               }else{
+                  return from(this.planEntityRepository.findOne(parseInt(planId.planId))).pipe(
+                       map((plan: PlanEntity) => {
+                           if(!plan)
+                               throw new NotFoundException(this.errorhandle(parseInt(planId.planId),"Find plan", 404, this.convertToDto(account)))
+                            account.plan = plan
+                            return this.accountEntityRepository
+                            .update( parseInt(id.id), account)
+                            .then(() => (this.errorhandle(parseInt(id.id),"update account plan", 200, this.convertToDto(account))))
+                       })
+                   )
+               }
+            })
+        )
+    }
+
     //check if acount exist with email then password
-    valdateAccount(email: string, password: string){
+    validateAccount(email: string, password: string){
         return from(this.findByEmail(email).pipe(
             switchMap((account: AccountEntity) => {
                if(!account){
@@ -85,7 +113,18 @@ export class AccountService {
     }
 
     convertToDto(account: any) {
-        const convertedAccount = new AccountDto(account.username, account.email, 1)
-        return convertedAccount
+        return  new AccountDto(account.username, account.email, account.id)
+    }
+
+    errorhandle(id:number,action:string,status:number,data=null){
+        return {
+            id: id,
+            action:action,
+            status: status,
+            data:data
+        }
     }
 }
+
+
+
