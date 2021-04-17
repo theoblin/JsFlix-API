@@ -1,51 +1,58 @@
-import {Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {PlanEntity} from "../plan/plan.entity";
+import {
+    BeforeInsert,
+    Column,
+    Entity,
+    JoinTable,
+    ManyToMany, ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn
+} from 'typeorm';
+import {PlanEntity} from "../../plan/model/plan.entity";
 import {JoinColumn} from "typeorm";
-import {UserEntity} from "../user/user.entity";
-import {VideoEntity} from "../video/video.entity";
+import {UserEntity} from "../../user/model/user.entity";
+import {VideoEntity} from "../../video/model/video.entity";
 
 @Entity()
 export class AccountEntity {
     @PrimaryGeneratedColumn()
-    readonly id: string;
+    id: number;
     @Column()
     readonly created_at: Date;
     @Column()
-    readonly next_bill_date: Date;
+    next_bill_date: Date;
     @Column()
-    readonly username: string;
+    username: string;
     @Column()
-    readonly password: string;
+    password: string;
     @Column()
-    readonly first_name: string;
+    first_name: string;
     @Column()
-    readonly last_name: string;
+    last_name: string;
     @Column()
-    readonly country: string;
+    country: string;
+    @Column({unique: true})
+    email: string;
 
-    @OneToOne(type => PlanEntity, plan => plan.account)
-    @JoinColumn({name: 'plan_id'})
-    plan: PlanEntity[];
+    @BeforeInsert()
+    emailToLowerCase(){
+        this.email = this.email.toLowerCase()
+    }
+
+    @ManyToOne(type => PlanEntity, plan => plan.account)
+    @JoinColumn({name: 'planId',referencedColumnName: "id" })
+    plan: PlanEntity;
 
     @OneToMany(type => UserEntity, user => user.account)
-    user: UserEntity[]
+    user: UserEntity
 
     @ManyToMany( type => VideoEntity, video => video.account)
     @JoinTable({
         name: "video_account", // table name for the junction table of this relation
-        joinColumn: {
-            name: "video",
-            referencedColumnName: "id"
-        },
-        inverseJoinColumn: {
-            name: "account",
-            referencedColumnName: "id"
-        }
     })
     video: VideoEntity[]
 
     constructor(
-        id: string,
+        id: number,
         created_at: Date,
         next_bill_date: Date,
         username:string,
@@ -53,6 +60,8 @@ export class AccountEntity {
         first_name: string,
         last_name: string,
         country: string,
+        email: string,
+
     ) {
         this.id = id;
         this.created_at = created_at;
@@ -62,5 +71,6 @@ export class AccountEntity {
         this.first_name = first_name;
         this.last_name = last_name;
         this.country = country;
+        this.email = email;
     }
 }

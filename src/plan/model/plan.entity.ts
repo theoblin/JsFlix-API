@@ -1,5 +1,5 @@
 import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {AccountEntity} from "../account/account.entity";
+import {AccountEntity} from "../../account/model/account.entity";
 
 @Entity()
 export class PlanEntity {
@@ -11,7 +11,7 @@ export class PlanEntity {
     readonly price: number;
 
     @OneToMany(type => AccountEntity, account => account.plan)
-    account: AccountEntity[];
+    account: AccountEntity;
 
     constructor(
         id: string,
