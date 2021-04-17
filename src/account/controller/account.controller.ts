@@ -1,13 +1,13 @@
-import {Body, Controller, Get, HttpException, Param, Post, Put, Query, Res} from '@nestjs/common';
+import {Body, Controller, Get, HttpException, Param, Post, Put} from '@nestjs/common';
 import {AccountService} from "../service/account.service";
 import {AccountEntity} from "../model/account.entity";
-import {catchError, map} from "rxjs/operators";
-import {of} from "rxjs";
+import {map} from "rxjs/operators";
+import {VideoService} from "../../video/service/video.service";
 
 @Controller('/api/v1/account')
 export class AccountController {
 
-    constructor(private accountService: AccountService) {}
+    constructor(private accountService: AccountService, private videoService: VideoService) {}
 
     //Create a new account
     @Post()
@@ -25,6 +25,12 @@ export class AccountController {
             )
         }
 
+    //Update account to change plan
+    @Put(':id')
+    addPlan(@Body() planId, @Param() id){
+        return this.accountService.addPlanToAccount(id,planId)
+    }
+
     //Get one user by ID
     @Get(":id")
     findUserById(@Param() id){
@@ -36,9 +42,10 @@ export class AccountController {
         }
     }
 
-    @Put(':id')
-    addPlan(@Body() planId, @Param() id){
-            return this.accountService.addPlanToAccount(id,planId)
+    //Get videos of account
+    @Get(':id/videos')
+    getVideos(@Param() id){
+        return this.videoService.getVideos(id)
     }
 
 }

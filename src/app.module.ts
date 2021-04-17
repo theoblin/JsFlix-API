@@ -6,6 +6,7 @@ import { ModelModule } from "./model/model.module";
 import { AccountController } from './account/controller/account.controller';
 import { AccountService } from "./account/service/account.service";
 import {AuthModule} from "./auth/module/auth.module";
+import {VideoService} from "./video/service/video.service";
 
 
 @Module({
@@ -31,6 +32,6 @@ import {AuthModule} from "./auth/module/auth.module";
   ],
 
   controllers: [AppController, AccountController],
-  providers: [AppService, AccountService],
+  providers: [AppService, AccountService, VideoService],
 })
 export class AppModule {}

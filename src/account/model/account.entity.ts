@@ -5,8 +5,7 @@ import {
     JoinTable,
     ManyToMany, ManyToOne,
     OneToMany,
-    OneToOne,
-    PrimaryGeneratedColumn, Unique
+    PrimaryGeneratedColumn
 } from 'typeorm';
 import {PlanEntity} from "../../plan/model/plan.entity";
 import {JoinColumn} from "typeorm";
@@ -34,7 +33,6 @@ export class AccountEntity {
     @Column({unique: true})
     email: string;
 
-
     @BeforeInsert()
     emailToLowerCase(){
         this.email = this.email.toLowerCase()
@@ -50,14 +48,6 @@ export class AccountEntity {
     @ManyToMany( type => VideoEntity, video => video.account)
     @JoinTable({
         name: "video_account", // table name for the junction table of this relation
-        joinColumn: {
-            name: "video",
-            referencedColumnName: "id"
-        },
-        inverseJoinColumn: {
-            name: "account",
-            referencedColumnName: "id"
-        }
     })
     video: VideoEntity[]
 
@@ -82,6 +72,5 @@ export class AccountEntity {
         this.last_name = last_name;
         this.country = country;
         this.email = email;
-
     }
 }

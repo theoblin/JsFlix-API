@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {JwtService} from "@nestjs/jwt";
-import {from, Observable, of} from "rxjs";
+import {from, Observable} from "rxjs";
 import {AccountEntity} from "../../account/model/account.entity";
 const bcrypt = require('bcrypt')
 

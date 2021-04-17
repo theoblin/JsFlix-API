@@ -9,17 +9,17 @@ export class TagEntity {
     @Column()
     readonly name: string;
 
-    @ManyToMany(type => VideoEntity, video => video.tag)
+    @ManyToMany(type => VideoEntity)
     @JoinTable({
         name: "video_tags", // table name for the junction table of this relation
-        joinColumn: {
+   /*     joinColumn: {
             name: "video",
             referencedColumnName: "id"
         },
         inverseJoinColumn: {
             name: "tag",
             referencedColumnName: "id"
-        }
+        }*/
     })
     video: VideoEntity[];
 

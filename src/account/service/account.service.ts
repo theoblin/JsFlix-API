@@ -1,13 +1,14 @@
-import {Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {AccountEntity} from "../model/account.entity";
-import {Repository} from "typeorm";
+import {createQueryBuilder, Repository} from "typeorm";
 import {AuthService} from "../../auth/service/auth.service";
-import {catchError, map, switchMap} from "rxjs/operators";
-import {from, Observable, throwError} from "rxjs";
+import {map, switchMap} from "rxjs/operators";
+import {from, Observable} from "rxjs";
 import {AccountDto} from "../dto/account.dto";
 import {PlanEntity} from "../../plan/model/plan.entity";
-import {constants} from "http2";
+import {VideoEntity} from "../../video/model/video.entity";
+import {VideoDto} from "../../video/dto/video.dto";
 
 @Injectable()
 export class AccountService {
@@ -17,6 +18,9 @@ export class AccountService {
         private readonly accountEntityRepository: Repository<AccountEntity>,
         @InjectRepository(PlanEntity)
         private planEntityRepository: Repository<PlanEntity>,
+        @InjectRepository(VideoEntity)
+        private videoEntityRepository: Repository<VideoEntity>,
+
         private authService: AuthService,
     ) {}
 
@@ -55,6 +59,7 @@ export class AccountService {
         )
     }
 
+    //Sign in account and return JWT token
     login(account:AccountEntity){
        return  from(this.validateAccount(account.email, account.password)).pipe(
            switchMap((account: AccountEntity) => {
@@ -108,14 +113,17 @@ export class AccountService {
         ))
     }
 
+    //Find account by email
     findByEmail(email: string){
         return from(this.accountEntityRepository.findOne({email}))
     }
 
+    //Convert to return safe payload
     convertToDto(account: any) {
         return  new AccountDto(account.username, account.email, account.id)
     }
 
+    //Error formatter
     errorhandle(id:number,action:string,status:number,data=null){
         return {
             id: id,
