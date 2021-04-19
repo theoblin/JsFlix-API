@@ -51,7 +51,7 @@ export class AccountService {
 
     //Find an account by ID
     findOne(id: number): Promise<any> {
-        return this.accountEntityRepository.findOne(id,{relations:['plan']}).then(account => {
+        return this.accountEntityRepository.findOne(id,{relations:['plan','user']}).then(account => {
                 if(!account)
                     throw new NotFoundException(this.errorhandle(id,"find account",404))
                 return this.convertToDto(account)
@@ -120,10 +120,10 @@ export class AccountService {
 
     //Convert to return safe payload
     convertToDto(account: any) {
-        return  new AccountDto(account.username, account.email, account.id)
+        return  new AccountDto(account.username, account.email, account.id, account.user)
     }
 
-    //Error formatter
+    //Errors formatter
     errorhandle(id:number,action:string,status:number,data=null){
         return {
             id: id,

@@ -6,6 +6,7 @@ import {PlanEntity} from "../../plan/model/plan.entity";
 import {VideoEntity} from "../model/video.entity";
 import {AuthService} from "../../auth/service/auth.service";
 import {VideoDto} from "../dto/video.dto";
+import {TagEntity} from "../../tag/model/tag.entity";
 
 @Injectable()
 export class VideoService {
@@ -13,19 +14,24 @@ export class VideoService {
     constructor(
         @InjectRepository(VideoEntity)
         private videoEntityRepository: Repository<VideoEntity>,
+        @InjectRepository(TagEntity)
+        private tagEntityRepository: Repository<TagEntity>,
     ) {}
 
+    //Get an account videos
     async getVideos(id) {
         const videosArray = []
-        return await this.videoEntityRepository.createQueryBuilder("video")
-            .leftJoinAndSelect("video.account", "account")
-            .where("account.id = :id", {id: id.id})
-            .getMany().then(e => {
-                e.forEach((est) => this.convertToVideoDto(est))
+         await this.videoEntityRepository.createQueryBuilder("video")
+             .leftJoinAndSelect("video.account", "account")
+             .leftJoinAndSelect("video.tag", "tag")
+             .where("account.id = :id", {id: id.id})
+             .getMany().then(videos => {
+                 videos.forEach((video) => videosArray.push(this.convertToVideoDto(video)))
             })
+        return videosArray
     }
 
     convertToVideoDto(video: any) {
-        return  new VideoDto(video.id,  video.add_at,video.title, video.miniature_url, video.description, video.rating, video.content_url, video.lang)
+        return  new VideoDto(video.id,  video.add_at,video.title, video.miniature_url,video.content_url, video.description, video.rating,  video.lang, video.tag)
     }
 }

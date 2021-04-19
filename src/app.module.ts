@@ -7,6 +7,10 @@ import { AccountController } from './account/controller/account.controller';
 import { AccountService } from "./account/service/account.service";
 import {AuthModule} from "./auth/module/auth.module";
 import {VideoService} from "./video/service/video.service";
+import { UserController } from './user/controller/user.controller';
+import { UserService } from './user/service/user/user.service';
+import { PlanService } from './plan/service/plan/plan.service';
+import { PlanController } from './plan/controller/plan/plan.controller';
 
 
 @Module({
@@ -31,7 +35,7 @@ import {VideoService} from "./video/service/video.service";
 
   ],
 
-  controllers: [AppController, AccountController],
-  providers: [AppService, AccountService, VideoService],
+  controllers: [AppController, AccountController, UserController, PlanController],
+  providers: [AppService, AccountService, VideoService, UserService, PlanService],
 })
 export class AppModule {}
