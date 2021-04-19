@@ -1,11 +1,10 @@
-import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {PlanEntity} from "../../plan/model/plan.entity";
+import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {AccountEntity} from "../../account/model/account.entity";
 
 @Entity()
 export class UserEntity {
     @PrimaryGeneratedColumn()
-    readonly id: string;
+    readonly id: number;
     @Column()
     readonly created_at: Date;
     @Column()
@@ -15,12 +14,12 @@ export class UserEntity {
     @Column()
     readonly is_child: boolean;
 
-    @OneToOne(type => AccountEntity, account => account.user)
-    @JoinColumn({name: 'account_id'})
+    @ManyToOne(type => AccountEntity, account => account.user)
+    @JoinColumn({name: 'accountId'})
     account: UserEntity[];
 
     constructor(
-        id: string,
+        id: number,
         created_at: Date,
         icon_url: string,
         username: string,
