@@ -1,10 +1,13 @@
 import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {VideoEntity} from "../../video/model/video.entity";
+import {ApiProperty} from "@nestjs/swagger";
 
 @Entity()
 export class TagEntity {
+    @ApiProperty({ example: 1, description: "Tag's ID" })
     @PrimaryGeneratedColumn()
     readonly id: string;
+    @ApiProperty({ example: "fantastic", description: "Tag's name" })
     @Column()
     readonly name: string;
 

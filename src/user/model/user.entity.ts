@@ -1,16 +1,22 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {AccountEntity} from "../../account/model/account.entity";
+import {ApiProperty} from "@nestjs/swagger";
 
 @Entity()
 export class UserEntity {
+    @ApiProperty({ example: 1, description: "User's name" })
     @PrimaryGeneratedColumn()
     readonly id: number;
+    @ApiProperty({ example: "2021-01-01", description: "Creation date of user" })
     @Column()
     readonly created_at: Date;
+    @ApiProperty({ example: "Path/of/image", description: "path for user icon" })
     @Column()
     readonly icon_url: string;
+    @ApiProperty({ example: "jean18", description: "User's username" })
     @Column()
     readonly username: string;
+    @ApiProperty({ example: false, description: "account restrictions" })
     @Column()
     readonly is_child: boolean;
 
