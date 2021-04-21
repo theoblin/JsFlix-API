@@ -11,6 +11,7 @@ import {UserDto} from "../../dto/user.dto";
 
 @Injectable()
 export class UserService {
+
     constructor(
         @InjectRepository(UserEntity)
         private readonly userEntityRepository: Repository<UserEntity>,
@@ -26,7 +27,6 @@ export class UserService {
              return from(this.planService.getAccountPlan(id)).pipe(
                  switchMap((plan) => {
                  return this.accountService.findOne(id).then(account => {
-                     console.log(account.user.length >= plan[0].max_user)
                      if(account.user.length >= plan[0].max_user)
                          throw new UnauthorizedException("Max user reached")
                      const user = this.userEntityRepository.create({...data, account : account})

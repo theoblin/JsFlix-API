@@ -31,6 +31,20 @@ export class VideoService {
         return videosArray
     }
 
+    async getOneVideo(idVideo, idAccount){
+        console.log("Account: " + idAccount,  "Video: " + idVideo)
+
+        return await this.videoEntityRepository.createQueryBuilder("video")
+            .leftJoinAndSelect("video.account", "account")
+            .where("account.id = :id", {id: idAccount})
+            .where("video.id = :id", {id: idVideo})
+            .getOne()
+
+
+
+
+    }
+
     convertToVideoDto(video: any) {
         return  new VideoDto(video.id,  video.add_at,video.title, video.miniature_url,video.content_url, video.description, video.rating,  video.lang, video.tag)
     }

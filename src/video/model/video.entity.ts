@@ -2,12 +2,13 @@ import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn
 import {TagEntity} from "../../tag/model/tag.entity";
 import {AccountEntity} from "../../account/model/account.entity";
 import {ApiProperty} from "@nestjs/swagger";
+import {RecommendationListEntity} from "../../recommendations/model/recommendationList.entity";
 
 @Entity()
 export class VideoEntity {
     @ApiProperty({ example: 1, description: "Video's ID" })
     @PrimaryGeneratedColumn()
-    readonly id: number;
+     id: number;
     @ApiProperty({ example: "2020-01-01", description: "Creation date" })
     @Column()
     readonly add_at: Date;
@@ -40,6 +41,11 @@ export class VideoEntity {
         name: "video_account"})
     account: AccountEntity[];
 
+    @ManyToMany(type => RecommendationListEntity, {cascade: true})
+    @JoinTable({
+        name: "video_recommendation_list" // table name for the junction table of this relation
+    })
+    rec: RecommendationListEntity;
 
 
     constructor(

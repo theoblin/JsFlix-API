@@ -11,6 +11,8 @@ import { UserController } from './user/controller/user.controller';
 import { UserService } from './user/service/user/user.service';
 import { PlanService } from './plan/service/plan/plan.service';
 import { PlanController } from './plan/controller/plan/plan.controller';
+import {RecommendationListService} from "./recommendations/service/recommendationList.service";
+import {RecommendationListController} from "./recommendations/controller/recommendationList.controller";
 
 
 @Module({
@@ -35,7 +37,7 @@ import { PlanController } from './plan/controller/plan/plan.controller';
 
   ],
 
-  controllers: [AppController, AccountController, UserController, PlanController],
-  providers: [AppService, AccountService, VideoService, UserService, PlanService],
+  controllers: [AppController, AccountController, UserController, PlanController,RecommendationListController],
+  providers: [AppService, AccountService, VideoService, UserService, PlanService,RecommendationListService],
 })
 export class AppModule {}
