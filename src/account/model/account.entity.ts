@@ -47,6 +47,7 @@ export class AccountEntity {
     emailToLowerCase(){
         this.email = this.email.toLowerCase()
     }
+
     @ApiProperty({ description: 'Account Plan' })
     @ManyToOne(type => PlanEntity, plan => plan.account)
     @JoinColumn({name: 'planId',referencedColumnName: "id" })

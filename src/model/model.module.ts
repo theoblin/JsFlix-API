@@ -6,9 +6,10 @@ import {PlanEntity} from "../plan/model/plan.entity";
 import {VideoEntity} from "../video/model/video.entity";
 import {TagEntity} from "../tag/model/tag.entity";
 import {AuthModule} from "../auth/module/auth.module";
+import {RecommendationListEntity} from "../recommendations/model/recommendationList.entity";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([UserEntity, AccountEntity,PlanEntity,VideoEntity,TagEntity]),
+    imports: [TypeOrmModule.forFeature([UserEntity, AccountEntity,PlanEntity,VideoEntity,TagEntity, RecommendationListEntity]),
     AuthModule],
     exports: [TypeOrmModule],
 })

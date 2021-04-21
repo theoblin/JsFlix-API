@@ -1,6 +1,7 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {AccountEntity} from "../../account/model/account.entity";
 import {ApiProperty} from "@nestjs/swagger";
+import {RecommendationListEntity} from "../../recommendations/model/recommendationList.entity";
 
 @Entity()
 export class UserEntity {
@@ -23,6 +24,10 @@ export class UserEntity {
     @ManyToOne(type => AccountEntity, account => account.user)
     @JoinColumn({name: 'accountId'})
     account: UserEntity[];
+
+    @ManyToOne(type => RecommendationListEntity, rec => rec.user)
+    @JoinColumn({name: 'listId',referencedColumnName: "id" })
+    rec: RecommendationListEntity;
 
     constructor(
         id: number,

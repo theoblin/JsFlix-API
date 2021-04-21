@@ -16,7 +16,7 @@ export class PlanService {
     ) {}
 
      async getAccountPlan(id) {
-        return await from(this.planEntityRepository.createQueryBuilder("plan")
+        return from(this.planEntityRepository.createQueryBuilder("plan")
             .leftJoinAndSelect("plan.account", "account")
             .where("account.id = :id", {id: id.id})
             .getMany())
